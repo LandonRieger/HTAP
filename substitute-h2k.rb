@@ -5294,6 +5294,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
               # Sequentially read file lines
               lineIn.strip!
               # Remove leading and trailing whitespace
+              lineIn.force_encoding 'ibm437'
               if ( lineIn !~ /^\s*$/ )
                 # Not an empty line!
                 if ( bReadOldERSValue && lineIn =~ /^Energuide Rating \(not rounded\) =/ )
