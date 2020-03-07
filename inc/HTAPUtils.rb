@@ -17,7 +17,12 @@ def HTAPInit()
   progShort.gsub!(/\.rb/,"")
   debug_out "Opening log files for #{progShort}"
   begin
-  $fLOG, $fSUMMARY = openLogFiles("#{progShort}_log.txt","#{progShort}_summary.out")
+  if defined?($BaseOutputDirectory)
+    $fLOG, $fSUMMARY = openLogFiles(File.join($BaseOutputDirectory, "#{progShort}_log.txt"),
+                                    File.join($BaseOutputDirectory, "#{progShort}_summary.out"))
+  else
+    $fLOG, $fSUMMARY = openLogFiles("#{progShort}_log.txt","#{progShort}_summary.out")
+  end
   log_out drawRuler("LOG FILE.",nil,80)
   log_out("Run started at #{$startProcessTime}\n")
   debug_out ("done.\n")

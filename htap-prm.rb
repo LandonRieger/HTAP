@@ -1526,9 +1526,9 @@ optparse = OptionParser.new do |opts|
       $SaveDirectoryRoot = File.join($BaseOutputDirectory, "HTAP-sim")
       $RunDirectoryRoot = File.join($BaseOutputDirectory, "HTAP-work")
       $gOutputFile = File.join($BaseOutputDirectory, "HTAP-prm-output.csv")
-      #$gResumeFile = File.join($BaseOutputDirectory, "HTAP-prm.resume")
+      $gResumeFile = File.join($BaseOutputDirectory, "HTAP-prm.resume")
       $gOutputJSON = File.join($BaseOutputDirectory, "HTAP-prm-output.json")
-      #$gFailFile = File.join($BaseOutputDirectory, "HTAP-prm-failures.txt")
+      $gFailFile = File.join($BaseOutputDirectory, "HTAP-prm-failures.txt")
    end
 
    opts.on("--compute-costs", "Estimate costs for assemblies using costing database.") do |o|
@@ -1638,9 +1638,9 @@ log_out ("Recovering git version info\n")
 $branch_name, $revision_number = HTAPData.getGitInfo()
 
 #$gOutputFile = "HTAP-prm-output.csv"
-$gResumeFile = "HTAP-prm.resume"
+#$gResumeFile = "HTAP-prm.resume"
 #$gOutputJSON = "HTAP-prm-output.json"
-$gFailFile = "HTAP-prm-failures.txt"
+#$gFailFile = "HTAP-prm-failures.txt"
 
 #$RunResultFilenameV2 = File.join($BaseOutputDirectory, "h2k_run_results.json")
 #$RunResultFilename = File.join($BaseOutputDirectory, "substitute-h2k_summary.out")
