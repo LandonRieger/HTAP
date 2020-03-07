@@ -458,7 +458,8 @@ def processFile(h2kElements)
   # in option Opt-DBFiles
   codeLibName = $gOptions["Opt-DBFiles"]["options"][ $gChoices["Opt-DBFiles"] ]["values"]["1"]["conditions"]["all"]
 
-  h2kCodeFile = $run_path + "\\StdLibs" + "\\" + codeLibName
+  #h2kCodeFile = $run_path + "\\StdLibs" + "\\" + codeLibName
+  h2kCodeFile = codeLibName
 
   if ( !File.exist?(h2kCodeFile) )
     fatalerror("Code library file #{codeLibName} not found in #{$run_path + "\\StdLibs" + "\\"}!")
@@ -7633,6 +7634,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         end
 
         fJsonOut = File.open("#{$gMasterPath}\\h2k_run_results.json", "w")
+        #fJsonOut = File.open("#{$RunResultFilenameV2}", "w")
         if ( fJsonOut.nil? )then
           fatalerror("Could not create #{$gMasterPath}\\SubstitutePL-output.txt")
         end

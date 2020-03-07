@@ -2,6 +2,7 @@ NewHouseArch
 HTAP-prm-output.json
 HTAP-prm-output.csv
 HTAP-prm-failures.txt
+HTAP-prm.resume
 HTAP-sim-*
 HTAP-work-*
 substitute-h2k-errors.txt

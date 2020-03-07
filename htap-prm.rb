@@ -24,10 +24,10 @@ include REXML   # This allows for no "REXML::" prefix to REXML methods
 
 $program = "htap-prm.rb"
 
-HTAPInit()
+#HTAPInit()
 
-log_out ("Recovering git version info\n")
-$branch_name, $revision_number = HTAPData.getGitInfo()
+#log_out ("Recovering git version info\n")
+#$branch_name, $revision_number = HTAPData.getGitInfo()
 
 $gRunUpgrades         = Hash.new
 $gOptionList          = Array.new
@@ -1432,7 +1432,7 @@ def run_these_cases(current_task_files)
 
   if ( ! $gDebug ) then
      stream_out (" - Deleting working directories... ")
-     FileUtils.rm_rf Dir.glob("HTAP-work-*")
+     FileUtils.rm_rf Dir.glob("#{$RunDirectoryRoot}-*")
      stream_out("done.\n\n")
   end
 
@@ -1464,10 +1464,7 @@ $gRulesetsFile = ""
 
 $gSubstitutePath = "C:\/HTAP\/substitute-h2k.rb"
 $gWarn = "1"
-$gOutputFile = "HTAP-prm-output.csv"
-$gResumeFile = "HTAP-prm.resume"
-$gOutputJSON = "HTAP-prm-output.json"
-$gFailFile = "HTAP-prm-failures.txt"
+
 $gSaveAllRuns = false
 $bResume = false 
 $bReadyToResume = false 
@@ -1482,7 +1479,11 @@ $gNumberOfThreads = 3
 $promptBeforeProceeding = false
 $StopOnError = false
 
-$gLEEPPathwayExport = false 
+$gLEEPPathwayExport = false
+
+# $BaseOutputDirectory = ""
+# $RunDirectoryRoot  = "HTAP-work"
+# $SaveDirectoryRoot = "HTAP-sim"
 
 #=====================================================================================
 # Parse command-line switches.
@@ -1519,6 +1520,16 @@ optparse = OptionParser.new do |opts|
       end
    end
 
+   opts.on("-s", "--base-directory DIRECTORY", "Output DIRECTORY for simulation files") do |o|
+      $BaseOutputDirectory = o
+      $BaseOutputDirectory = $BaseOutputDirectory.gsub("\\", "/")
+      $SaveDirectoryRoot = File.join($BaseOutputDirectory, "HTAP-sim")
+      $RunDirectoryRoot = File.join($BaseOutputDirectory, "HTAP-work")
+      $gOutputFile = File.join($BaseOutputDirectory, "HTAP-prm-output.csv")
+      #$gResumeFile = File.join($BaseOutputDirectory, "HTAP-prm.resume")
+      $gOutputJSON = File.join($BaseOutputDirectory, "HTAP-prm-output.json")
+      #$gFailFile = File.join($BaseOutputDirectory, "HTAP-prm-failures.txt")
+   end
 
    opts.on("--compute-costs", "Estimate costs for assemblies using costing database.") do |o|
       $gComputeCosts = true
@@ -1615,12 +1626,27 @@ optparse = OptionParser.new do |opts|
 
 end
 
-
-
 if ARGV.empty? then
    ARGV.push "-h"
 end
 optparse.parse!    # Note: parse! strips all arguments from ARGV and parse does not
+
+
+HTAPInit()
+
+log_out ("Recovering git version info\n")
+$branch_name, $revision_number = HTAPData.getGitInfo()
+
+#$gOutputFile = "HTAP-prm-output.csv"
+$gResumeFile = "HTAP-prm.resume"
+#$gOutputJSON = "HTAP-prm-output.json"
+$gFailFile = "HTAP-prm-failures.txt"
+
+#$RunResultFilenameV2 = File.join($BaseOutputDirectory, "h2k_run_results.json")
+#$RunResultFilename = File.join($BaseOutputDirectory, "substitute-h2k_summary.out")
+
+$RunResultFilenameV2 = "h2k_run_results.json"
+$RunResultFilename = "substitute-h2k_summary.out"
 
 stream_out(drawRuler("A simple parallel run manager for HTAP"))
 reportSRC($branch_name, $revision_number)
@@ -1630,10 +1656,7 @@ $processed_file_count = 0
 $RunDirs  = Array.new
 $SaveDirs = Array.new
 $FailedRuns  = Array.new
-$RunDirectoryRoot  = "HTAP-work"
-$SaveDirectoryRoot = "HTAP-sim"
-$RunResultFilenameV2 = "h2k_run_results.json"
-$RunResultFilename = "substitute-h2k_summary.out"
+
 
 
               #Hash.new{ |h,k| h[k] = Hash.new{|h,k| h[k] = Array.new}}
@@ -1961,10 +1984,10 @@ if ( $promptBeforeProceeding )
 end
 
 stream_out("    - Deleting prior HTAP-work directories... ")
-FileUtils.rm_rf Dir.glob("HTAP-work-*")
+FileUtils.rm_rf Dir.glob("#{$RunDirectoryRoot}-*")
 stream_out (" done.\n")
 stream_out("    - Deleting prior HTAP-sim directories... ")
-FileUtils.rm_rf Dir.glob("HTAP-sim-*")
+FileUtils.rm_rf Dir.glob("#{$SaveDirectoryRoot}-*")
 stream_out (" done.\n")
 
 
