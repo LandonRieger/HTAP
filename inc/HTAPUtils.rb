@@ -5,9 +5,6 @@ def HTAPInit()
   #debug_on
   $startProcessTime = Time.now
   $gMasterPath = Dir.getwd()
-  print "\n-------------------------\n"
-  print " gMasterPath: #{$gMasterPath}"
-  print "\n-------------------------\n"
 
   $gHelp = false
   $gHelpAvailableFlagged = false 

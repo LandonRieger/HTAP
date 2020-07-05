@@ -3624,6 +3624,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
     thisCodeInHouse = false
     foundFavLibCode = false
     foundUsrDefLibCode = false
+    foundStandardLibCode = false
     foundCodeLibElement = ""
     locationCodeFavText = "Codes/Window/Favorite/Code"
     h2kCodeLibElements.each(locationCodeFavText) do |codeElement|
@@ -3644,11 +3645,25 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         end
       end
     end
-    if ( foundFavLibCode || foundUsrDefLibCode )
+    if (( ! foundFavLibCode ) || ( ! foundUsrDefLibCode ))
+      print "making a standard window"
+      locationCodeStandardText = "Codes/Window/Standard/Code"
+      h2kCodeLibElements.each(locationCodeStandardText) do |codeElement|
+        if ( codeElement.get_text("Label") == newValue )
+          foundStandardLibCode = true
+          foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+          break
+        end
+      end
+    end
+
+    if ( foundFavLibCode || foundUsrDefLibCode || foundStandardLibCode )
       # Check to see if this code is already used in H2K file and add, if not.
       # Code references are in the <Codes> section. Avoid duplicates!
       if ( foundFavLibCode )
         locationText = "HouseFile/Codes/Window/Favorite"
+      elsif ( foundStandardLibCode )
+        locationText = "HouseFile/Codes/Window/Standard"
       else
         locationText = "HouseFile/Codes/Window/UserDefined"
       end
@@ -3668,10 +3683,14 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           # No Favorite or UserDefined section in house file Codes section -- add it!
           if ( foundFavLibCode )
             h2kFileElements["HouseFile/Codes/Window"].add_element("Favorite")
+          elsif ( foundStandardLibCode )
+            h2kFileElement["HouseFile/Codes/Window"].add_element("Standard")
           else
             h2kFileElements["HouseFile/Codes/Window"].add_element("UserDefined")
           end
         end
+        print $useThisCodeID[winOrient]
+        print foundCodeLibElement
         foundCodeLibElement.attributes["id"] = $useThisCodeID[winOrient]
         h2kFileElements[locationText].add(foundCodeLibElement)
       end
