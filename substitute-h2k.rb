@@ -3646,7 +3646,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
       end
     end
     if (( ! foundFavLibCode ) || ( ! foundUsrDefLibCode ))
-      print "making a standard window"
       locationCodeStandardText = "Codes/Window/Standard/Code"
       h2kCodeLibElements.each(locationCodeStandardText) do |codeElement|
         if ( codeElement.get_text("Label") == newValue )
@@ -3689,8 +3688,6 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             h2kFileElements["HouseFile/Codes/Window"].add_element("UserDefined")
           end
         end
-        print $useThisCodeID[winOrient]
-        print foundCodeLibElement
         foundCodeLibElement.attributes["id"] = $useThisCodeID[winOrient]
         h2kFileElements[locationText].add(foundCodeLibElement)
       end
