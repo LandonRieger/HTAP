@@ -41,7 +41,7 @@ HTAPInit()
 # Parameters controlling timeout and re-try limits for HOT2000
 # maxRunTime in seconds (decimal value accepted) set to nil or 0 means no timeout checking!
 # Typical H2K run < 10 seconds, but may much take longer in ERS mode
-$maxRunTime = 20
+$maxRunTime = 60
 # JTB 05-10-2016: Also setting maximum retries within timeout period
 $maxTries   = 3
 
@@ -3468,8 +3468,14 @@ def createProgramXMLSection( houseElements )
 
 
   loc = "HouseFile/Program"
-  houseElements[loc].attributes["class"] = "ca.nrcan.gc.OEE.ERS.ErsProgram"
-  houseElements[loc].add_element("Labels")
+  begin
+    houseElements[loc].attributes["class"] = "ca.nrcan.gc.OEE.ERS.ErsProgram"
+    houseElements[loc].add_element("Labels")
+  rescue NoMethodError
+    houseElements['HouseFile'].add_element("Program")
+    houseElements[loc].attributes["class"] = "ca.nrcan.gc.OEE.ERS.ErsProgram"
+    houseElements[loc].add_element("Labels")
+  end
 
   loc = "HouseFile/Program/Labels"
   houseElements[loc].attributes["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
