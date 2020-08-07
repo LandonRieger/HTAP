@@ -2703,6 +2703,7 @@ def processFile(h2kElements)
           # check if base ventilator exists and store values if true, then delete it and replace it with hrv later
           locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/BaseVentilator"
           print "--------------------- HRVSPEC OPTIONS ----------------------\n"
+          hasBaseVentilator = false
           if ( h2kElements[locationText] != nil )
             hasBaseVentilator = true
             supplyFlowrate = h2kElements[locationText].attributes["supplyFlowrate"]
@@ -2717,6 +2718,12 @@ def processFile(h2kElements)
             print "supplyFlowrate: ", supplyFlowrate
             print "\nexhaustFlowrate: ", exhaustFlowrate
             print "\n--------------------------------------------------------------------------\n"
+          end
+          print "hasBaseVentilator", hasBaseVentilator, "\n"
+          if hasBaseVentilator
+            print "This check worked!\n"
+          else
+            print "This check failed!\n"
           end
           print "entry tag: ", tag
           if ( tag =~ /OPT-H2K-FlowReq/ &&  value != "NA" )
@@ -2786,12 +2793,13 @@ def processFile(h2kElements)
             if ( h2kElements[locationText] == nil )
               createHRV(h2kElements)
             end
-            if ( hasBaseVentilator )
+            if hasBaseVentilator
               print "Setting supplyFlowrate as ", supplyFlowrate, "\n"
               print "Setting exhaustFlowrate as ", exhaustFlowrate, "\n"
               h2kElements[locationText].attributes["supplyFlowrate"] = supplyFlowrate
               h2kElements[locationText].attributes["exhaustFlowrate"] = exhaustFlowrate
             else
+              print "why am I here??????"
               h2kElements[locationText].attributes["supplyFlowrate"] = "#{[($FanFlow * 10.6 / 1.5).round(0),value.to_f].max}"
               h2kElements[locationText].attributes["exhaustFlowrate"] = "#{[($FanFlow * 10.6 / 1.5).round(0),value.to_f].max}"
             end
