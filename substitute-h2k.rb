@@ -2783,12 +2783,9 @@ def processFile(h2kElements)
               createHRV(h2kElements)
             end
             if hasBaseVentilator
-              print "Setting supplyFlowrate as ", supplyFlowrate, "\n"
-              print "Setting exhaustFlowrate as ", exhaustFlowrate, "\n"
               h2kElements[locationText].attributes["supplyFlowrate"] = supplyFlowrate
               h2kElements[locationText].attributes["exhaustFlowrate"] = exhaustFlowrate
             else
-              print "why am I here??????"
               h2kElements[locationText].attributes["supplyFlowrate"] = "#{[($FanFlow * 10.6 / 1.5).round(0),value.to_f].max}"
               h2kElements[locationText].attributes["exhaustFlowrate"] = "#{[($FanFlow * 10.6 / 1.5).round(0),value.to_f].max}"
             end
