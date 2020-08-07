@@ -2699,33 +2699,6 @@ def processFile(h2kElements)
           # HRV System
           #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-HRVspec/ )
-
-          # check if base ventilator exists and store values if true, then delete it and replace it with hrv later
-          locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/BaseVentilator"
-          print "--------------------- HRVSPEC OPTIONS ----------------------\n"
-          hasBaseVentilator = false
-          if ( h2kElements[locationText] != nil )
-            hasBaseVentilator = true
-            supplyFlowrate = h2kElements[locationText].attributes["supplyFlowrate"]
-            exhaustFlowrate = h2kElements[locationText].attributes["exhaustFlowrate"]
-            isDefaultFanpower = "true"
-            isEnergyStar = "false"
-            isHomeVentilatingInstituteCertified = "false"
-            isSupplemental = "false"
-
-            locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList"
-            h2kElements[locationText].delete_element("BaseVentilator")
-            print "supplyFlowrate: ", supplyFlowrate
-            print "\nexhaustFlowrate: ", exhaustFlowrate
-            print "\n--------------------------------------------------------------------------\n"
-          end
-          print "hasBaseVentilator", hasBaseVentilator, "\n"
-          if hasBaseVentilator
-            print "This check worked!\n"
-          else
-            print "This check failed!\n"
-          end
-          print "entry tag: ", tag
           if ( tag =~ /OPT-H2K-FlowReq/ &&  value != "NA" )
             locationText = "HouseFile/House/Ventilation/Requirements/Use"
             h2kElements[locationText].attributes["code"] = value
@@ -2789,6 +2762,22 @@ def processFile(h2kElements)
             h2kElements[locationText].attributes["value"] = value
 
           elsif ( tag =~ /OPT-H2K-HRVSupply/ &&  value != "NA" )
+            # check if base ventilator exists and store values if true, then delete it and replace it with hrv later
+            locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/BaseVentilator"
+            hasBaseVentilator = false
+            if ( h2kElements[locationText] != nil )
+              hasBaseVentilator = true
+              supplyFlowrate = h2kElements[locationText].attributes["supplyFlowrate"]
+              exhaustFlowrate = h2kElements[locationText].attributes["exhaustFlowrate"]
+              isDefaultFanpower = "true"
+              isEnergyStar = "false"
+              isHomeVentilatingInstituteCertified = "false"
+              isSupplemental = "false"
+
+              locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList"
+              h2kElements[locationText].delete_element("BaseVentilator")
+            end
+
             locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/Hrv"
             if ( h2kElements[locationText] == nil )
               createHRV(h2kElements)
