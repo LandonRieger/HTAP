@@ -2728,6 +2728,20 @@ def processFile(h2kElements)
               h2kElements[locationText].attributes["bathrooms"] = 1
             end
 
+            # check if base ventilator exists and store values if true
+            locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/BaseVentilator"
+            if ( h2kElements[locationText] != nil )
+              hasBaseVentilator = true
+              supplyFlowrate = h2kElements[locationText].attributes["supplyFlowrate"]
+              exhaustFlowrate = h2kElements[locationText].attributes["exhaustFlowrate"]
+              isDefaultFanpower = "true"
+              isEnergyStar = "false"
+              isHomeVentilatingInstituteCertified = "false"
+              isSupplemental = "false"
+              h2kCodeElements[locationText].delete()
+            end
+            #     delete BaseVentilator
+
             # If F326 specified && basement exists, set vent-rate for other basement areas to 10/Ls. Otherwise, 0.
             # This code is needed b/c setting F326 in homes with slab foundations can cause hot2000 to produce an errror.
             if ( value == 1 )
@@ -2765,10 +2779,13 @@ def processFile(h2kElements)
             if ( h2kElements[locationText] == nil )
               createHRV(h2kElements)
             end
-            h2kElements[locationText].attributes["supplyFlowrate"] = "#{[($FanFlow * 10.6 / 1.5).round(0),value.to_f].max}"
-            # L/s supply
-            h2kElements[locationText].attributes["exhaustFlowrate"] = "#{[($FanFlow * 10.6 / 1.5).round(0),value.to_f].max}"
-            # Exhaust = Supply
+            if ( hasBaseVentilator )
+              h2kElements[locationText].attributes["supplyFlowrate"] = supplyFlowrate
+              h2kElements[locationText].attributes["exhaustFlowrate"] = exhaustFlowrate
+            else
+              h2kElements[locationText].attributes["supplyFlowrate"] = "#{[($FanFlow * 10.6 / 1.5).round(0),value.to_f].max}"
+              h2kElements[locationText].attributes["exhaustFlowrate"] = "#{[($FanFlow * 10.6 / 1.5).round(0),value.to_f].max}"
+            end
             h2kElements[locationText].attributes["isDefaultFanpower"] = "true"
 
           elsif ( tag =~ /OPT-H2K-Rating1/ &&  value != "NA" )
