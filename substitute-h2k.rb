@@ -2699,6 +2699,22 @@ def processFile(h2kElements)
           # HRV System
           #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-HRVspec/ )
+        
+          # check if base ventilator exists and store values if true, then delete it and replace it with hrv later
+          locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/BaseVentilator"
+          if ( h2kElements[locationText] != nil )
+            hasBaseVentilator = true
+            supplyFlowrate = h2kElements[locationText].attributes["supplyFlowrate"]
+            exhaustFlowrate = h2kElements[locationText].attributes["exhaustFlowrate"]
+            isDefaultFanpower = "true"
+            isEnergyStar = "false"
+            isHomeVentilatingInstituteCertified = "false"
+            isSupplemental = "false"
+
+            locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList"
+            h2kElements[locationText].delete_element("BaseVentilator")
+          end
+
           if ( tag =~ /OPT-H2K-FlowReq/ &&  value != "NA" )
             locationText = "HouseFile/House/Ventilation/Requirements/Use"
             h2kElements[locationText].attributes["code"] = value
@@ -2726,21 +2742,6 @@ def processFile(h2kElements)
             end
             if (value == "1" && h2kElements[locationText].attributes["bathrooms"].to_i < 1)
               h2kElements[locationText].attributes["bathrooms"] = 1
-            end
-
-            # check if base ventilator exists and store values if true
-            locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/BaseVentilator"
-            if ( h2kElements[locationText] != nil )
-              hasBaseVentilator = true
-              supplyFlowrate = h2kElements[locationText].attributes["supplyFlowrate"]
-              exhaustFlowrate = h2kElements[locationText].attributes["exhaustFlowrate"]
-              isDefaultFanpower = "true"
-              isEnergyStar = "false"
-              isHomeVentilatingInstituteCertified = "false"
-              isSupplemental = "false"
-
-              locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList"
-              h2kElements[locationText].delete_element("BaseVentilator")
             end
             #     delete BaseVentilator
 
