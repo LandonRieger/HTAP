@@ -3698,67 +3698,26 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
         h2kFileElements[locationText].add(foundCodeLibElement)
       end
 
+      locations = ["HouseFile/House/Components/Wall/Components/Window",
+                   "HouseFile/House/Components/Basement/Components/Window",
+                   "HouseFile/House/Components/Walkout/Components/Window",
+                   "HouseFile/House/Components/Crawlspace/Components/Window"]
+
+      for locationText in locations
       # Windows in walls elements
-      locationText = "HouseFile/House/Components/Wall/Components/Window"
-      h2kFileElements.each(locationText) do |element|
-        if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
-          # Check if each house entry has an "idref" attribute and add if it doesn't.
-          # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
-          if element[3][1].attributes["idref"] != nil
-            # ../Construction/Type
-            element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
-          else
-            element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+      # locationText = "HouseFile/House/Components/Wall/Components/Window"
+        h2kFileElements.each(locationText) do |element|
+          if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
+            # Check if each house entry has an "idref" attribute and add if it doesn't.
+            # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
+            if element[3][1].attributes["idref"] != nil
+              # ../Construction/Type
+              element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+            else
+              element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+            end
+            element[3][1].text = newValue
           end
-          element[3][1].text = newValue
-        end
-      end
-      # Windows in basement
-      locationText = "HouseFile/House/Components/Basement/Components/Window"
-      h2kFileElements.each(locationText) do |element|
-        # 9=FacingDirection
-        if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
-          # Check if each house entry has an "idref" attribute and add if it doesn't.
-          # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
-          if element[3][1].attributes["idref"] != nil
-            # ../Construction/Type
-            element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
-          else
-            element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
-          end
-          element[3][1].text = newValue
-        end
-      end
-      # Windows in walkout
-      locationText = "HouseFile/House/Components/Walkout/Components/Window"
-      h2kFileElements.each(locationText) do |element|
-        # 9=FacingDirection
-        if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
-          # Check if each house entry has an "idref" attribute and add if it doesn't.
-          # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
-          if element[3][1].attributes["idref"] != nil
-            # ../Construction/Type
-            element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
-          else
-            element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
-          end
-          element[3][1].text = newValue
-        end
-      end
-      # Windows in crawlspace (closed or vented)
-      locationText = "HouseFile/House/Components/Crawlspace/Components/Window"
-      h2kFileElements.each(locationText) do |element|
-        # 9=FacingDirection
-        if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
-          # Check if each house entry has an "idref" attribute and add if it doesn't.
-          # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
-          if element[3][1].attributes["idref"] != nil
-            # ../Construction/Type
-            element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
-          else
-            element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
-          end
-          element[3][1].text = newValue
         end
       end
 
