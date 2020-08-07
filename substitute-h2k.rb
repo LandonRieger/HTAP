@@ -2715,10 +2715,10 @@ def processFile(h2kElements)
             locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList"
             h2kElements[locationText].delete_element("BaseVentilator")
             print "supplyFlowrate: ", supplyFlowrate
-            print "exhaustFlowrate: ", exhaustFlowrate
+            print "\nexhaustFlowrate: ", exhaustFlowrate
             print "\n--------------------------------------------------------------------------\n"
           end
-
+          print "entry tag: ", tag
           if ( tag =~ /OPT-H2K-FlowReq/ &&  value != "NA" )
             locationText = "HouseFile/House/Ventilation/Requirements/Use"
             h2kElements[locationText].attributes["code"] = value
@@ -2787,6 +2787,8 @@ def processFile(h2kElements)
               createHRV(h2kElements)
             end
             if ( hasBaseVentilator )
+              print "Setting supplyFlowrate as ", supplyFlowrate, "\n"
+              print "Setting exhaustFlowrate as ", exhaustFlowrate, "\n"
               h2kElements[locationText].attributes["supplyFlowrate"] = supplyFlowrate
               h2kElements[locationText].attributes["exhaustFlowrate"] = exhaustFlowrate
             else
