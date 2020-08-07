@@ -2757,7 +2757,7 @@ def processFile(h2kElements)
 
           elsif ( tag =~ /OPT-H2K-OpSched/ &&  value != "NA" )
             locationText = "HouseFile/House/Ventilation/WholeHouse/OperationSchedule"
-            h2kElements[locationText].attributes["code"] = "0"
+            h2kElements[locationText].attributes["code"] = "1"
             # User Specified
             h2kElements[locationText].attributes["value"] = value
 
