@@ -2699,9 +2699,10 @@ def processFile(h2kElements)
           # HRV System
           #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-HRVspec/ )
-        
+
           # check if base ventilator exists and store values if true, then delete it and replace it with hrv later
           locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList/BaseVentilator"
+          print "--------------------- HRVSPEC OPTIONS ----------------------\n"
           if ( h2kElements[locationText] != nil )
             hasBaseVentilator = true
             supplyFlowrate = h2kElements[locationText].attributes["supplyFlowrate"]
@@ -2713,6 +2714,9 @@ def processFile(h2kElements)
 
             locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList"
             h2kElements[locationText].delete_element("BaseVentilator")
+            print "supplyFlowrate: ", supplyFlowrate
+            print "exhaustFlowrate: ", exhaustFlowrate
+            print "\n--------------------------------------------------------------------------\n"
           end
 
           if ( tag =~ /OPT-H2K-FlowReq/ &&  value != "NA" )
