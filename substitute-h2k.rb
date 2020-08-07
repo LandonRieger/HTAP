@@ -2738,7 +2738,9 @@ def processFile(h2kElements)
               isEnergyStar = "false"
               isHomeVentilatingInstituteCertified = "false"
               isSupplemental = "false"
-              h2kCodeElements[locationText].delete()
+
+              locationText = "HouseFile/House/Ventilation/WholeHouseVentilatorList"
+              h2kElements[locationText].delete_element("BaseVentilator")
             end
             #     delete BaseVentilator
 
