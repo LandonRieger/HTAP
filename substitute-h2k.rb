@@ -3615,7 +3615,7 @@ end
 # =========================================================================================
 #  Function to change window codes by orientation
 # =========================================================================================
-def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileElements, choiceEntryValue, tagValue )
+def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileElements, choiceEntryValue, tagValue, matchType=nil )
   # Change ALL existing windows for this orientation (winOrient) to the library code name
   # specified in newValue. If this code name exists in the code library elements (h2kCodeLibElements),
   # use the code (either Fav or UsrDef) for all entries facing in this direction. Code names in the code
@@ -3624,9 +3624,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
 
   # Look for this code name in code library (Favorite and UserDefined)
   windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
-
   $useThisCodeID  = {  "S"  =>  191 ,    "SE" =>  192 ,    "E"  =>  193 ,    "NE" =>  194 ,    "N"  =>  195 ,    "NW" =>  196 ,    "W"  =>  197 ,    "SW" =>  198   }
-
     thisCodeInHouse = false
     foundFavLibCode = false
     foundUsrDefLibCode = false
@@ -3643,6 +3641,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
     # Code library names are also unique across Favorite and User Defined codes
     if ( ! foundFavLibCode )
       locationCodeUsrDefText = "Codes/Window/UserDefined/Code"
+      typePosition = 4
       h2kCodeLibElements.each(locationCodeUsrDefText) do |codeElement|
         if ( codeElement.get_text("Label") == newValue )
           foundUsrDefLibCode = true
@@ -3653,6 +3652,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
     end
     if (( ! foundFavLibCode ) || ( ! foundUsrDefLibCode ))
       locationCodeStandardText = "Codes/Window/Standard/Code"
+      typePosition = 6
       h2kCodeLibElements.each(locationCodeStandardText) do |codeElement|
         if ( codeElement.get_text("Label") == newValue )
           foundStandardLibCode = true
