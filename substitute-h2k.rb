@@ -1276,15 +1276,11 @@ def processFile(h2kElements)
               #
             end
 
-
-
           elsif ( choiceEntry =~ /Opt-FloorAboveCrawl/ )
             # If there is a crawlspace and an R-value has been specified for the floor above the crawlspace, update
             if ( tag =~ /OPT-H2K-EffRValue/ &&  value != "NA" && h2kElements["HouseFile/House/Components/Crawlspace"] != nil)
 
             end
-
-
 
           else
             if ( value == "NA" or value == "" )
@@ -1298,45 +1294,48 @@ def processFile(h2kElements)
           # Windows (by facing direction)
           #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-Windows/ )
-          if ( tag =~ /Opt-win-\*-CON/ &&  value != "NA" )
-            ChangeWinCodeByOrient( "S", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-            ChangeWinCodeByOrient( "E", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-            ChangeWinCodeByOrient( "N", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-            ChangeWinCodeByOrient( "W", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-            ChangeWinCodeByOrient( "SE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-            ChangeWinCodeByOrient( "SW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-            ChangeWinCodeByOrient( "NE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-            ChangeWinCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
-          elsif ( tag =~ /Opt-win-S-CON/ &&  value != "NA" )
-            ChangeWinCodeByOrient( "S", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+          for windowStyle in ["0", "1", "2", "3", "4", "5"]
+              wvalue = value + windowStyle
+              if ( tag =~ /Opt-win-\*-CON/ &&  value != "NA" )
+                ChangeWinCodeByOrient( "S", wvalue, h2kCodeElements, h2kElements, choiceEntry, tag, windowStyle )
+                ChangeWinCodeByOrient( "E", wvalue, h2kCodeElements, h2kElements, choiceEntry, tag, windowStyle )
+                ChangeWinCodeByOrient( "N", wvalue, h2kCodeElements, h2kElements, choiceEntry, tag, windowStyle )
+                ChangeWinCodeByOrient( "W", wvalue, h2kCodeElements, h2kElements, choiceEntry, tag, windowStyle )
+                ChangeWinCodeByOrient( "SE", wvalue, h2kCodeElements, h2kElements, choiceEntry, tag, windowStyle )
+                ChangeWinCodeByOrient( "SW", wvalue, h2kCodeElements, h2kElements, choiceEntry, tag, windowStyle )
+                ChangeWinCodeByOrient( "NE", wvalue, h2kCodeElements, h2kElements, choiceEntry, tag, windowStyle )
+                ChangeWinCodeByOrient( "NW", wvalue, h2kCodeElements, h2kElements, choiceEntry, tag, windowStyle )
+              elsif ( tag =~ /Opt-win-S-CON/ &&  value != "NA" )
+                ChangeWinCodeByOrient( "S", wvalue, h2kCodeElements, h2kElements, choiceEntry, tag, windowStyle )
 
-          elsif ( tag =~ /Opt-win-E-CON/ &&  value != "NA" )
-            ChangeWinCodeByOrient( "E", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+              elsif ( tag =~ /Opt-win-E-CON/ &&  value != "NA" )
+                ChangeWinCodeByOrient( "E", wvalue, h2kCodeElements, h2kElements, choiceEntry, tag, windowStyle )
 
-          elsif ( tag =~ /Opt-win-N-CON/ &&  value != "NA" )
-            ChangeWinCodeByOrient( "N", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+              elsif ( tag =~ /Opt-win-N-CON/ &&  value != "NA" )
+                ChangeWinCodeByOrient( "N", wvalue, h2kCodeElements, h2kElements, choiceEntry, tag, windowStyle )
 
-          elsif ( tag =~ /Opt-win-W-CON/ &&  value != "NA" )
-            ChangeWinCodeByOrient( "W", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+              elsif ( tag =~ /Opt-win-W-CON/ &&  value != "NA" )
+                ChangeWinCodeByOrient( "W", wvalue, h2kCodeElements, h2kElements, choiceEntry, tag, windowStyle )
 
-          elsif ( tag =~ /Opt-win-SE-CON/ &&  value != "NA" )
-            ChangeWinCodeByOrient( "SE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+              elsif ( tag =~ /Opt-win-SE-CON/ &&  value != "NA" )
+                ChangeWinCodeByOrient( "SE", wvalue, h2kCodeElements, h2kElements, choiceEntry, tag, windowStyle )
 
-          elsif ( tag =~ /Opt-win-SW-CON/ &&  value != "NA" )
-            ChangeWinCodeByOrient( "SW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+              elsif ( tag =~ /Opt-win-SW-CON/ &&  value != "NA" )
+                ChangeWinCodeByOrient( "SW", wvalue, h2kCodeElements, h2kElements, choiceEntry, tag, windowStyle )
 
-          elsif ( tag =~ /Opt-win-NE-CON/ &&  value != "NA" )
-            ChangeWinCodeByOrient( "NE", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+              elsif ( tag =~ /Opt-win-NE-CON/ &&  value != "NA" )
+                ChangeWinCodeByOrient( "NE", wvalue, h2kCodeElements, h2kElements, choiceEntry, tag, windowStyle )
 
-          elsif ( tag =~ /Opt-win-NW-CON/ &&  value != "NA" )
-            ChangeWinCodeByOrient( "NW", value, h2kCodeElements, h2kElements, choiceEntry, tag )
+              elsif ( tag =~ /Opt-win-NW-CON/ &&  value != "NA" )
+                ChangeWinCodeByOrient( "NW", wvalue, h2kCodeElements, h2kElements, choiceEntry, tag, windowStyle )
 
-          else
-            if ( value == "NA" )
-              # Don't change anything
-            else
-              fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
-            end
+              else
+                if ( value == "NA" )
+                  # Don't change anything
+                else
+                  fatalerror("Missing H2K #{choiceEntry} tag:#{tag}")
+                end
+              end
           end
 
 
@@ -3612,6 +3611,38 @@ def SetFuelCostRates( fuelName, houseElements, fuelElements, theValue )
 
 end
 
+def GetWindowTypeInHouse(idref, h2kFileElements)
+  newValue = idref
+  print 'looking for window type in code: ', idref
+  thisCodeInHouse = false
+  foundFavLibCode = false
+  foundUsrDefLibCode = false
+  foundStandardLibCode = false
+  foundCodeLibElement = ""
+  locationsText = ["HouseFile/Codes/Window/Favorite",
+                   "HouseFile/Codes/Window/Standard",
+                   "HouseFile/Codes/Window/UserDefined"]
+  windowStyle = "None"
+  for locationText in locationsText
+    h2kFileElements.each(locationText + "/Code") do |element|
+      if ( element.get_text("Label") == newValue )
+        thisCodeInHouse = true
+        if locationText.split('/')[-1] == 'UserDefined'
+          windowStyle = element[5][1][5].attributes['code']
+        elsif locationText.split('/')[-1] == 'Standard'
+          windowStyle = element[5][9].attributes['code']
+        end
+        break
+      end
+    end
+    if ( thisCodeInHouse )
+      break
+    end
+  end
+  print "Window Style is ", windowStyle, "\n"
+  return windowStyle
+end
+
 # =========================================================================================
 #  Function to change window codes by orientation
 # =========================================================================================
@@ -3710,13 +3741,16 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
           if ( element[9].attributes["code"] == windowFacingH2KVal[winOrient].to_s )
             # Check if each house entry has an "idref" attribute and add if it doesn't.
             # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
-            if element[3][1].attributes["idref"] != nil
-              # ../Construction/Type
-              element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
-            else
-              element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+            currentLabel = element[3].get_text("Type")
+            if ((GetWindowTypeInHouse(currentLabel, h2kFileElements) == matchType) | (matchType == nil))
+              if element[3][1].attributes["idref"] != nil
+                # ../Construction/Type
+                element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+              else
+                element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+              end
+              element[3][1].text = newValue
             end
-            element[3][1].text = newValue
           end
         end
       end
