@@ -1075,6 +1075,65 @@ def processFile(h2kElements)
                 element.delete_attribute("idref")
               end
             end
+          elsif ( tag =~ /Opt-wall-CON/ && value != "NA")
+            # If this code name exists in the code library, use the code
+            # (either Fav or UsrDef) for all entries. Code names in library are unique.
+            # Note: Not using "Standard", non-library codes (e.g., 2221292000)
+
+            # Look for this code name in code library (Favorite and UserDefined)
+            thisCodeInHouse = false
+            useThisCodeID = "Code 79"
+            foundFavLibCode = false
+            foundCodeLibElement = ""
+            locationCodeFavText = "Codes/Wall/Standard/Code"
+            h2kCodeElements.each(locationCodeFavText) do |codeElement|
+              if ( codeElement.get_text("Label") == value )
+                foundFavLibCode = true
+                foundCodeLibElement = Marshal.load(Marshal.dump(codeElement))
+                break
+              end
+            end
+            if ( foundFavLibCode )
+              # Check to see if this code is already used in H2K file and add, if not.
+              # Code references are in the <Codes> section. Avoid duplicates!
+              locationText = "HouseFile/Codes/Wall/Standard"
+              h2kElements.each(locationText + "/Code") do |element|
+                if ( element.get_text("Label") == value )
+                  thisCodeInHouse = true
+                  useThisCodeID = element.attributes["id"]
+                  break
+                end
+              end
+              if ( ! thisCodeInHouse )
+                if ( h2kElements["HouseFile/Codes/Wall"] == nil )
+                  # No section ofthis type in house file Codes section -- add it!
+                  h2kElements["HouseFile/Codes"].add_element("Wall")
+                end
+                if ( h2kElements[locationText] == nil )
+                  # No Favorite or UserDefined section in house file Codes section -- add it!
+                  h2kElements["HouseFile/Codes/Wall"].add_element("Standard")
+                end
+                foundCodeLibElement.attributes["id"] = useThisCodeID
+                h2kElements[locationText].add(foundCodeLibElement)
+              end
+              # Change all existing surface references of this type to useThisCodeID
+              locationText = "HouseFile/House/Components/Wall/Construction/Type"
+              h2kElements.each(locationText) do |element|
+                # Check if each house entry has an "idref" attribute and add if it doesn't.
+                if element.attributes["idref"] != nil
+                  element.attributes["idref"] = useThisCodeID
+                else
+                  element.add_attribute("idref", useThisCodeID)
+                end
+                element.text = value
+                element.attributes["nominalRValue"] = 0.0
+              end
+            else
+              # Code name not found in the code library
+              # Do nothing! Must be either a User Specified R-value in OPT-H2K-EffRValue
+              # or NA in OPT-H2K-EffRValue
+              debug_out(" INFO: Code name: #{value} NOT in code library for H2K #{choiceEntry} tag:#{tag}\n")
+            end
           end
 
           # Floor header User-Specified R-values
