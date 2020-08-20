@@ -41,7 +41,7 @@ HTAPInit()
 # Parameters controlling timeout and re-try limits for HOT2000
 # maxRunTime in seconds (decimal value accepted) set to nil or 0 means no timeout checking!
 # Typical H2K run < 10 seconds, but may much take longer in ERS mode
-$maxRunTime = 60
+$maxRunTime = 120
 # JTB 05-10-2016: Also setting maximum retries within timeout period
 $maxTries   = 3
 
@@ -3613,7 +3613,6 @@ end
 
 def GetWindowTypeInHouse(idref, h2kFileElements)
   newValue = idref
-  print 'looking for window type in code: ', idref
   thisCodeInHouse = false
   foundFavLibCode = false
   foundUsrDefLibCode = false
@@ -3639,7 +3638,6 @@ def GetWindowTypeInHouse(idref, h2kFileElements)
       break
     end
   end
-  print "Window Style is ", windowStyle, "\n"
   return windowStyle
 end
 
@@ -3656,6 +3654,8 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
   # Look for this code name in code library (Favorite and UserDefined)
   windowFacingH2KVal = { "S" => 1, "SE" => 2, "E" => 3, "NE" => 4, "N" => 5, "NW" => 6, "W" => 7, "SW" => 8 }
   $useThisCodeID  = {  "S"  =>  191 ,    "SE" =>  192 ,    "E"  =>  193 ,    "NE" =>  194 ,    "N"  =>  195 ,    "NW" =>  196 ,    "W"  =>  197 ,    "SW" =>  198   }
+
+    codeID = $useThisCodeID[winOrient].to_s + matchType.to_s
     thisCodeInHouse = false
     foundFavLibCode = false
     foundUsrDefLibCode = false
@@ -3706,7 +3706,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
       h2kFileElements.each(locationText + "/Code") do |element|
         if ( element.get_text("Label") == newValue )
           thisCodeInHouse = true
-          $useThisCodeID[winOrient] = element.attributes["id"]
+          codeID = element.attributes["id"]
           break
         end
       end
@@ -3725,7 +3725,7 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             h2kFileElements["HouseFile/Codes/Window"].add_element("UserDefined")
           end
         end
-        foundCodeLibElement.attributes["id"] = $useThisCodeID[winOrient]
+        foundCodeLibElement.attributes["id"] = codeID
         h2kFileElements[locationText].add(foundCodeLibElement)
       end
 
@@ -3742,12 +3742,18 @@ def ChangeWinCodeByOrient( winOrient, newValue, h2kCodeLibElements, h2kFileEleme
             # Check if each house entry has an "idref" attribute and add if it doesn't.
             # Change each house entry to reference a new <Codes> section $useThisCodeID[winOrient]
             currentLabel = element[3].get_text("Type")
-            if ((GetWindowTypeInHouse(currentLabel, h2kFileElements) == matchType) | (matchType == nil))
+            currentStyle = GetWindowTypeInHouse(currentLabel, h2kFileElements)
+            if ((currentStyle == matchType) | (matchType == nil))
+              print "currentLabel: ", currentLabel, "\n"
+              print "currentStyle: ", currentStyle, "\n"
+              print "replacing idref ", element[3][1].attributes["idref"], " with ", codeID, "\n"
+              print "newValue: ", newValue, "\n"
+              print "matchType: ", matchType, "\n"
               if element[3][1].attributes["idref"] != nil
                 # ../Construction/Type
-                element[3][1].attributes["idref"] = $useThisCodeID[winOrient]
+                element[3][1].attributes["idref"] = codeID
               else
-                element[3][1].add_attribute("idref", $useThisCodeID[winOrient])
+                element[3][1].add_attribute("idref", codeID)
               end
               element[3][1].text = newValue
             end
