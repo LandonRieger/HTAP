@@ -148,12 +148,19 @@ module HTAP2H2K
       debug_out " Basement/crawlspace configuration : #{basementConfig}\n"
       h2kFdnData["BasementConfig"] = basementConfig
       h2kFdnData["CrawlConfig"] = crawlSpaceConfig
-      h2kFdnData["rEffIntWall"] =  myOptions["Opt-FoundationWallIntIns"]["options"][rEff_IntWall]["values"]["1"]["conditions"]["all"].to_f
-      h2kFdnData["rEffExtWall"] =  myOptions["Opt-FoundationWallExtIns"]["options"][rEff_ExtWall]["values"]["1"]["conditions"]["all"].to_f
-      h2kFdnData["rEff_SlabBG"] =  myOptions["Opt-FoundationSlabBelowGrade"]["options"][rEff_SlabBG]["values"]["1"]["conditions"]["all"].to_f
+      if h2kFdnData["rEffIntWall"] =  myOptions["Opt-FoundationWallIntIns"]["options"][rEff_IntWall] != nil
+        h2kFdnData["rEffIntWall"] =  myOptions["Opt-FoundationWallIntIns"]["options"][rEff_IntWall]["values"]["1"]["conditions"]["all"].to_f
+      end
+      if myOptions["Opt-FoundationWallExtIns"]["options"][rEff_ExtWall] != nil
+        h2kFdnData["rEffExtWall"] =  myOptions["Opt-FoundationWallExtIns"]["options"][rEff_ExtWall]["values"]["1"]["conditions"]["all"].to_f
+      end
+      if h2kFdnData["rEff_SlabBG"] =  myOptions["Opt-FoundationSlabBelowGrade"]["options"][rEff_SlabBG] != nil
+        h2kFdnData["rEff_SlabBG"] =  myOptions["Opt-FoundationSlabBelowGrade"]["options"][rEff_SlabBG]["values"]["1"]["conditions"]["all"].to_f
+      end
 
       debug_out "Processing basements/crawlspaces with following specs:\n#{h2kFdnData.pretty_inspect}"
 
+      print "H2K Foundation Data: ", h2kFdnData["rEffIntWall"]
       H2KFile.updBsmCrawlDef(h2kFdnData,h2kElements)
 
 
