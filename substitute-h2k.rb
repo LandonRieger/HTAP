@@ -1353,7 +1353,7 @@ def processFile(h2kElements)
           # Windows (by facing direction)
           #--------------------------------------------------------------------------
         elsif ( choiceEntry =~ /Opt-Windows/ )
-          for windowStyle in ["0", "1", "2", "3", "4", "5"]
+          for windowStyle in ["0", "1", "2", "4", "5"]
               wvalue = value + "_type_" + windowStyle
               if ( tag =~ /Opt-win-\*-CON/ &&  value != "NA" )
                 ChangeWinCodeByOrient( "S", wvalue, h2kCodeElements, h2kElements, choiceEntry, tag, windowStyle )
